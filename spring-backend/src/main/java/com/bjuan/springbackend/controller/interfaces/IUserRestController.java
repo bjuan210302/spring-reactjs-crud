@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface IUserRestController {
 
-    public List<User> getAll();
+    public List<User> findAll();
 	
 	public User findById(Long id);
 

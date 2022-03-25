@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface IProductRestController {
 
-    public List<Product> getAll();
+    public List<Product> findAll();
 	
 	public Product findById(Long id);
 

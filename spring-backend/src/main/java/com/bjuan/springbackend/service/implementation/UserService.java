@@ -7,6 +7,7 @@ import com.bjuan.springbackend.model.User;
 import com.bjuan.springbackend.repository.IUserRepository;
 import com.bjuan.springbackend.service.interfaces.IUserService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -15,28 +16,30 @@ public class UserService implements IUserService{
 
     private IUserRepository userRepository;
 
+    @Autowired
+	public UserService(IUserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
+
     @Override
     public void save(User user) {
-        // TODO Auto-generated method stub
-        
+        userRepository.save(user);
     }
 
     @Override
     public Optional<User> findById(long id) {
-        // TODO Auto-generated method stub
-        return null;
+        return userRepository.findById(id);
     }
 
     @Override
     public List<User> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+        // IDE doesn't complain but im not sure this is safe
+        return (List<User>) userRepository.findAll();
     }
 
     @Override
     public void delete(User user) {
-        // TODO Auto-generated method stub
-        
+        userRepository.delete(user);
     }
     
 }

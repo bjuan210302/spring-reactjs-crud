@@ -9,29 +9,26 @@ import com.bjuan.springbackend.service.interfaces.IProductService;
 
 public class ProductService implements IProductService {
     
-    private IProdcutRepository prodcutRepository;
+    private IProdcutRepository productRepository;
 
     @Override
     public void save(Product product) {
-        // TODO Auto-generated method stub
+        productRepository.save(product);
     }
 
     @Override
     public Optional<Product> findById(long id) {
-        // TODO Auto-generated method stub
-        return null;
+        return productRepository.findById(id);
     }
 
     @Override
     public List<Product> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+        return (List<Product>) productRepository.findAll();
     }
 
     @Override
     public void delete(Product product) {
-        // TODO Auto-generated method stub
-        
+        productRepository.delete(product);
     }
     
 }
