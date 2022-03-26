@@ -1,6 +1,7 @@
 package com.bjuan.springbackend.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,9 +33,8 @@ public class UserServiceTest{
 	@Test
 	void saveTest(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		userService.save(u);
+		long id = u.getId();
 
 		Optional<User> retrived = userService.findById(id);
 		assertTrue(retrived.isPresent());
@@ -44,47 +44,44 @@ public class UserServiceTest{
 	@Test
 	void saveDuplicatedEmailTest(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		u.setEmail("goku.egoista@gmai.com");
 		userService.save(u);
+		long id = u.getId(); // Important to place getId() AFTER saving the object
 
-		final User u2 = new User();
-		id = 2;
-		u2.setId(id);
+		final User u2 = new User(); //final because lambda expression
 		u2.setEmail("goku.egoista@gmai.com");
 		assertThrows(IllegalArgumentException.class, () -> {
 			userService.save(u2);
 		});
+		long id2 = u2.getId();
 
 		assertEquals(1, userService.findAll().size());
 		
-		Optional<User> retrived = userService.findById(1);
+		Optional<User> retrived = userService.findById(id);
 		assertTrue(retrived.isPresent());
 
-		retrived = userService.findById(2);
+		retrived = userService.findById(id2);
 		assertTrue(retrived.isEmpty());
 	}
 
 	@Test
 	void saveMultipleTest(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		userService.save(u);
+		long id = u.getId();
+	
+		u = new User();
+		userService.save(u);
+		long id2 = u.getId();
 
 		Optional<User> retrived = userService.findById(id);
 		assertTrue(retrived.isPresent());
 		assertEquals(id, retrived.get().getId());
 
-		id = 2;
-		u = new User();
-		u.setId(id);
-		userService.save(u);
-
-		retrived = userService.findById(id);
+		retrived = userService.findById(id2);
 		assertTrue(retrived.isPresent());
-		assertEquals(id, retrived.get().getId());
+		assertEquals(id2, retrived.get().getId());
+
 		assertEquals(2, userService.findAll().size());
 	}
 
@@ -92,42 +89,43 @@ public class UserServiceTest{
 	@Test
 	void saveReplaceTest(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		userService.save(u);
+		long id = u.getId();
 
-		assertEquals(1, userService.findAll().size());
-		
-		u = new User();
-		u.setId(id);
-		u.setName("name");
-		userService.save(u);
-		
 		assertEquals(1, userService.findAll().size());
 
 		Optional<User> retrived = userService.findById(id);
+		assertNull(retrived.get().getName()); // First user has no name
+		
+		u = new User();
+		u.setId(id);
+		u.setName("name"); //Updated one has name
+		System.out.println(u.getId());
+		userService.save(u);
+		System.out.println(u.getId());
+		
+		assertEquals(1, userService.findAll().size());
+
+		retrived = userService.findById(id);
 		assertTrue(retrived.isPresent());
 		assertEquals("name", retrived.get().getName());
 
 	}
+
 	@Test
 	void findAllTest(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		userService.save(u);
 		assertEquals(1, userService.findAll().size());
 
-		id = 2;
 		u = new User();
-		u.setId(id);
 		userService.save(u);		
 		assertEquals(2, userService.findAll().size());
 
-		id = 3;
+		// Add update
 		u = new User();
-		u.setId(id);
 		userService.save(u);
+		long id = u.getId();
 		assertEquals(3, userService.findAll().size());
 
 		u = new User();
@@ -140,12 +138,12 @@ public class UserServiceTest{
 		assertEquals(2, userService.findAll().size());
 
 	}
+
 	@Test
 	void deleteTest(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		userService.save(u);
+		long id = u.getId();
 
 		userService.delete(u);
 
@@ -153,11 +151,10 @@ public class UserServiceTest{
 		assertTrue(retrived.isEmpty());
 		assertEquals(0, userService.findAll().size());
 	}
+
 	@Test
 	void deleteTestInvalidArg(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		assertThrows(IllegalArgumentException.class, () -> {
 			userService.delete(u);
 		});
@@ -166,9 +163,8 @@ public class UserServiceTest{
 	@Test
 	void deleteByIdTest(){
 		User u = new User();
-		long id = 1;
-		u.setId(id);
 		userService.save(u);
+		long id = u.getId();
 
 		userService.deleteById(id);
 
@@ -176,13 +172,11 @@ public class UserServiceTest{
 		assertTrue(retrived.isEmpty());
 		assertEquals(0, userService.findAll().size());
 	}
+
 	@Test
 	void deleteByIdTestInvalidArg(){
-		User u = new User();
-		long id = 1;
-		u.setId(id);
 		assertThrows(IllegalArgumentException.class, () -> {
-			userService.deleteById(id);
+			userService.deleteById((long)1);
 		});
 	}
 
