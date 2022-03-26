@@ -10,6 +10,8 @@ public interface IUserService {
 
 	public Optional<User> findById(long id);
 
+	public Optional<User> findByEmail(String email);
+
 	public List<User> findAll();
 
 	public void delete(User user);

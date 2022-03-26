@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 
 public interface IUserRestController {
 
+	public ResponseEntity<User> signup(User requestUser);
+
+	public ResponseEntity<User> login(User requestUser);
+
     public ResponseEntity<List<User>> findAll();
 	
 	public ResponseEntity<User> findById(Long id);
-
-	public ResponseEntity<User> save(User user);
 
 	public ResponseEntity<User> delete(Long id) ;
 }

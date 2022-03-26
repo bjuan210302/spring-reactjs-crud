@@ -10,5 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IUserRepository extends CrudRepository<User, Long>{
     
+    // If i understand correctly, if this returns a list, the query is automatic 
     List<User> findByEmail(String email);
 }

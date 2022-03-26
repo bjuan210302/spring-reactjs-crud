@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,28 +27,62 @@ public class UserRestController implements IUserRestController{
     @Autowired
 	private UserService userService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> findAll() {
-        return new ResponseEntity<List<User>>(this.userService.findAll(), HttpStatus.OK);
-    }
+    @PostMapping("/signup")
+    public ResponseEntity<User> signup(@RequestBody User requestUser) {
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> findById(@PathVariable("id") Long id) {
-        if (userService.findById(id).isPresent())
-            return new ResponseEntity<User>(userService.findById(id).get(), HttpStatus.OK);
+        Optional<User> candidate = validateAndCreate(requestUser);
+        if(candidate.isEmpty())
+            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         
-        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
-    }
-
-    @GetMapping("/save")
-    public ResponseEntity<User> save(@RequestBody User user) {
+        User newUser = candidate.get();
         try{
-            userService.save(user);
-            return new ResponseEntity<User>(user, HttpStatus.OK);
+            userService.save(newUser);
+            return new ResponseEntity<User>(newUser, HttpStatus.OK);
         }catch(IllegalArgumentException e){
             return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody User requestUser) {
+        // The logic here is that, if the password is correct, a complete object
+        // of the user is returned. With that the browser has access to the user ID, which
+        // is required to do CRUD operations.
+
+        Optional<User> databaseUser = userService.findByEmail(requestUser.getEmail());
+
+        if(databaseUser.isEmpty())
+            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+        
+        // Cutting-edge security
+        if(!databaseUser.get().getPassword().equals(requestUser.getPassword()))
+            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+        
+        return new ResponseEntity<User>(databaseUser.get(), HttpStatus.OK);
+    }
+
+    public Optional<User> validateAndCreate(User requestUser){
+        // Probably will delete this. Front should check that user input is not null
+        // and make validations for name, surname length and email, password structure
+        boolean flag = true;
+        
+        flag = flag & requestUser.getName() != null;
+        flag = flag & requestUser.getSurname() != null;
+        flag = flag & requestUser.getEmail() != null;
+        flag = flag & requestUser.getPassword() != null;
+
+        if(!flag)
+            return Optional.empty();
+
+        User newUser = new User();
+        newUser.setName(requestUser.getName());
+        newUser.setSurname(requestUser.getSurname());
+        newUser.setEmail(requestUser.getEmail());
+        newUser.setPassword(requestUser.getPassword());
+        
+        return Optional.of(newUser);
+    }
+    // Don't really know if ill need this
 
     @GetMapping("/del/{id}")
     public ResponseEntity<User> delete(@PathVariable("id") Long id) {
@@ -60,4 +95,16 @@ public class UserRestController implements IUserRestController{
         }
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> findAll() {
+        return new ResponseEntity<List<User>>(this.userService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@PathVariable("id") Long id) {
+        if (userService.findById(id).isPresent())
+            return new ResponseEntity<User>(userService.findById(id).get(), HttpStatus.OK);
+        
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+    }
 }

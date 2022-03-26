@@ -24,7 +24,7 @@ public class UserService implements IUserService{
     @Override
     public void save(User user){
         // As to avoid user with same email
-        if(user.getEmail() != null && !userRepository.findByEmail(user.getEmail()).isEmpty())
+        if(user.getEmail() != null && !findByEmail(user.getEmail()).isEmpty())
             throw new IllegalArgumentException();
 
         // Don't need a save-replace
@@ -37,6 +37,17 @@ public class UserService implements IUserService{
     @Override
     public Optional<User> findById(long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        // Is safe to assume that this array is either empty or has only one entry
+        // as the app doen't allow duplicated emails
+        List<User> queryResult = userRepository.findByEmail(email);
+
+        if(queryResult.isEmpty())
+            return Optional.empty();
+        return Optional.of(queryResult.get(0));
     }
 
     @Override
