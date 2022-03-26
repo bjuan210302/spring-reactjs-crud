@@ -13,4 +13,6 @@ public interface IProductService {
 	public List<Product> findAll();
 
 	public void delete(Product product);
+
+	public void deleteAll();
 }

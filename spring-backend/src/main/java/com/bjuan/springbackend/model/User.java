@@ -3,18 +3,20 @@ package com.bjuan.springbackend.model;
 import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Data
 public class User {
 
-    @Id @GeneratedValue
+    @Id
     private long id;
     
     private String name;
@@ -22,6 +24,7 @@ public class User {
     private String email;
     private String password;
 
+    @OneToMany(targetEntity=Product.class)
     private List<Product> products;
 
 }

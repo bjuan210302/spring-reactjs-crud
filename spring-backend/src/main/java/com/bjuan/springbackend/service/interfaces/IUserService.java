@@ -13,4 +13,6 @@ public interface IUserService {
 	public List<User> findAll();
 
 	public void delete(User user);
+
+	public void deleteAll();
 }

@@ -7,6 +7,9 @@ import com.bjuan.springbackend.model.Product;
 import com.bjuan.springbackend.repository.IProdcutRepository;
 import com.bjuan.springbackend.service.interfaces.IProductService;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ProductService implements IProductService {
     
     private IProdcutRepository productRepository;
@@ -29,6 +32,11 @@ public class ProductService implements IProductService {
     @Override
     public void delete(Product product) {
         productRepository.delete(product);
+    }
+
+    @Override
+    public void deleteAll() {
+        productRepository.deleteAll();
     }
     
 }
