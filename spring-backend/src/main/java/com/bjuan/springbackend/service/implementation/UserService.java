@@ -25,11 +25,11 @@ public class UserService implements IUserService{
     public void save(User user){
         // As to avoid user with same email
         if(user.getEmail() != null && !findByEmail(user.getEmail()).isEmpty())
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("There's already and user with that email");
 
         // Don't need a save-replace
         if(userRepository.findById(user.getId()).isPresent())
-            throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Replacing existing users is not supported");
 
         userRepository.save(user);
     }

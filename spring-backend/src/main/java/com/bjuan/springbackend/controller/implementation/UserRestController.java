@@ -23,28 +23,29 @@ public class UserRestController implements IUserRestController{
 
     // I haven't really used ResponseEntity, but I suppose it is ok to keep
     // returns consistent across class, and then only check for body if HttpStatus == OK
+    // Edit: new format is body is User object or just error msg
 
     @Autowired
 	private UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(@RequestBody User requestUser) {
-
+    public ResponseEntity<?> signup(@RequestBody User requestUser) {
+        
         Optional<User> candidate = validateAndCreate(requestUser);
         if(candidate.isEmpty())
-            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            return ResponseEntityBuilder("One or more arguments were are invalid", HttpStatus.BAD_REQUEST);
         
         User newUser = candidate.get();
         try{
             userService.save(newUser);
-            return new ResponseEntity<User>(newUser, HttpStatus.OK);
+            return ResponseEntityBuilder(newUser, HttpStatus.OK);
         }catch(IllegalArgumentException e){
-            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            return ResponseEntityBuilder(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User requestUser) {
+    public ResponseEntity<?> login(@RequestBody User requestUser) {
         // The logic here is that, if the password is correct, a complete object
         // of the user is returned. With that the browser has access to the user ID, which
         // is required to do CRUD operations.
@@ -52,13 +53,21 @@ public class UserRestController implements IUserRestController{
         Optional<User> databaseUser = userService.findByEmail(requestUser.getEmail());
 
         if(databaseUser.isEmpty())
-            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            return ResponseEntityBuilder("User with that email doesn't exists", HttpStatus.BAD_REQUEST);
         
         // Cutting-edge security
         if(!databaseUser.get().getPassword().equals(requestUser.getPassword()))
-            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+            return ResponseEntityBuilder("Wrong password", HttpStatus.BAD_REQUEST);
         
-        return new ResponseEntity<User>(databaseUser.get(), HttpStatus.OK);
+        return ResponseEntityBuilder(databaseUser.get(), HttpStatus.OK);
+    }
+
+    //Should this be a class?
+    public ResponseEntity<?> ResponseEntityBuilder(String body, HttpStatus status){
+        return ResponseEntity.status(status).body(body);
+    }
+    public ResponseEntity<?> ResponseEntityBuilder(User body, HttpStatus status){
+        return ResponseEntity.status(status).body(body);
     }
 
     public Optional<User> validateAndCreate(User requestUser){
