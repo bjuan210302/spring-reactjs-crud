@@ -22,7 +22,11 @@ public class UserService implements IUserService{
 	}
 
     @Override
-    public void save(User user) {
+    public void save(User user){
+        // As to avoid user with same email
+        if(user.getEmail() != null && !userRepository.findByEmail(user.getEmail()).isEmpty())
+            throw new IllegalArgumentException();
+
         userRepository.save(user);
     }
 
@@ -39,7 +43,16 @@ public class UserService implements IUserService{
 
     @Override
     public void delete(User user) {
+        if(userRepository.findById(user.getId()).isEmpty())
+            throw new IllegalArgumentException();
         userRepository.delete(user);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if(userRepository.findById(id).isEmpty())
+            throw new IllegalArgumentException();
+        userRepository.deleteById(id);
     }
 
     @Override

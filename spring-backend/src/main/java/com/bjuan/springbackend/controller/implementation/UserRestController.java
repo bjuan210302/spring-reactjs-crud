@@ -20,39 +20,44 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/api/v1/users/")
 public class UserRestController implements IUserRestController{
 
+    // I haven't really used ResponseEntity, but I suppose it is ok to keep
+    // returns consistent across class, and then only check for body if HttpStatus == OK
+
     @Autowired
 	private UserService userService;
 
     @GetMapping("/all")
-    public List<User> findAll() {
-        return this.userService.findAll();
+    public ResponseEntity<List<User>> findAll() {
+        return new ResponseEntity<List<User>>(this.userService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable("id") Long id) {
+    public ResponseEntity<User> findById(@PathVariable("id") Long id) {
         if (userService.findById(id).isPresent())
-            return userService.findById(id).get();
+            return new ResponseEntity<User>(userService.findById(id).get(), HttpStatus.OK);
         
-        return null;
+        return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/save")
     public ResponseEntity<User> save(@RequestBody User user) {
-        //TODO: Comprobations
-        userService.save(user);
-		return new ResponseEntity<User>(HttpStatus.OK);
+        try{
+            userService.save(user);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        }catch(IllegalArgumentException e){
+            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/del/{id}")
     public ResponseEntity<User> delete(@PathVariable("id") Long id) {
-        Optional<User> userToDelete = userService.findById(id);
-
-        if (userToDelete.isPresent()){
-            userService.delete(userToDelete.get());
-            return new ResponseEntity<User>(userToDelete.get(), HttpStatus.OK);
+        try{
+            Optional<User> user = userService.findById(id);
+            userService.deleteById(id);
+            return new ResponseEntity<User>(user.get(), HttpStatus.OK);
+        }catch(IllegalArgumentException e){
+            return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
         }
-        
-        return new ResponseEntity<User>(HttpStatus.NO_CONTENT);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.bjuan.springbackend.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
@@ -41,6 +42,31 @@ public class UserServiceTest{
 	}
 
 	@Test
+	void saveDuplicatedEmailTest(){
+		User u = new User();
+		long id = 1;
+		u.setId(id);
+		u.setEmail("goku.egoista@gmai.com");
+		userService.save(u);
+
+		final User u2 = new User();
+		id = 2;
+		u2.setId(id);
+		u2.setEmail("goku.egoista@gmai.com");
+		assertThrows(IllegalArgumentException.class, () -> {
+			userService.save(u2);
+		});
+
+		assertEquals(1, userService.findAll().size());
+		
+		Optional<User> retrived = userService.findById(1);
+		assertTrue(retrived.isPresent());
+
+		retrived = userService.findById(2);
+		assertTrue(retrived.isEmpty());
+	}
+
+	@Test
 	void saveMultipleTest(){
 		User u = new User();
 		long id = 1;
@@ -62,6 +88,7 @@ public class UserServiceTest{
 		assertEquals(2, userService.findAll().size());
 	}
 
+	// TODO: Dont really need a save replace, as users won't be updated.
 	@Test
 	void saveReplaceTest(){
 		User u = new User();
@@ -131,7 +158,32 @@ public class UserServiceTest{
 		User u = new User();
 		long id = 1;
 		u.setId(id);
-		userService.delete(u);
+		assertThrows(IllegalArgumentException.class, () -> {
+			userService.delete(u);
+		});
+	}
+
+	@Test
+	void deleteByIdTest(){
+		User u = new User();
+		long id = 1;
+		u.setId(id);
+		userService.save(u);
+
+		userService.deleteById(id);
+
+		Optional<User> retrived = userService.findById(id);
+		assertTrue(retrived.isEmpty());
+		assertEquals(0, userService.findAll().size());
+	}
+	@Test
+	void deleteByIdTestInvalidArg(){
+		User u = new User();
+		long id = 1;
+		u.setId(id);
+		assertThrows(IllegalArgumentException.class, () -> {
+			userService.deleteById(id);
+		});
 	}
 
 }

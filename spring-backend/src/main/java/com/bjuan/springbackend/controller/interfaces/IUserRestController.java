@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface IUserRestController {
 
-    public List<User> findAll();
+    public ResponseEntity<List<User>> findAll();
 	
-	public User findById(Long id);
+	public ResponseEntity<User> findById(Long id);
 
 	public ResponseEntity<User> save(User user);
 
