@@ -27,6 +27,10 @@ public class UserService implements IUserService{
         if(user.getEmail() != null && !userRepository.findByEmail(user.getEmail()).isEmpty())
             throw new IllegalArgumentException();
 
+        // Don't need a save-replace
+        if(userRepository.findById(user.getId()).isPresent())
+            throw new IllegalArgumentException();
+
         userRepository.save(user);
     }
 

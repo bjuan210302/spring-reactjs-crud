@@ -11,6 +11,7 @@ import com.bjuan.springbackend.model.User;
 import com.bjuan.springbackend.service.implementation.UserService;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,6 +66,24 @@ public class UserServiceTest{
 	}
 
 	@Test
+	void saveDuplicatedIdTest(){
+		User u = new User();
+		userService.save(u);
+		long id = u.getId(); // Important to place getId() AFTER saving the object
+
+		final User u2 = new User(); //final because lambda expression
+		u2.setId(id);
+		assertThrows(IllegalArgumentException.class, () -> {
+			userService.save(u2);
+		});
+
+		assertEquals(1, userService.findAll().size());
+		
+		Optional<User> retrived = userService.findById(id);
+		assertTrue(retrived.isPresent());
+	}
+
+	@Test
 	void saveMultipleTest(){
 		User u = new User();
 		userService.save(u);
@@ -86,6 +105,7 @@ public class UserServiceTest{
 	}
 
 	// TODO: Dont really need a save replace, as users won't be updated.
+	@Disabled
 	@Test
 	void saveReplaceTest(){
 		User u = new User();
@@ -122,20 +142,21 @@ public class UserServiceTest{
 		userService.save(u);		
 		assertEquals(2, userService.findAll().size());
 
-		// Add update
-		u = new User();
-		userService.save(u);
-		long id = u.getId();
-		assertEquals(3, userService.findAll().size());
+		// Add update 
+		// Wont need, commented out
+		// u = new User();
+		// userService.save(u);
+		// long id = u.getId();
+		// assertEquals(3, userService.findAll().size());
 
-		u = new User();
-		u.setId(id);
-		userService.save(u);
-		assertEquals(3, userService.findAll().size());
+		// u = new User();
+		// u.setId(id);
+		// userService.save(u);
+		// assertEquals(3, userService.findAll().size());
 
 		userService.delete(u);
 
-		assertEquals(2, userService.findAll().size());
+		assertEquals(1, userService.findAll().size());
 
 	}
 
