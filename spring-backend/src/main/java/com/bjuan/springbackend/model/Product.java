@@ -19,7 +19,8 @@ public class Product {
 
     @Id @GeneratedValue
     private long id;
-    
+
+    private long ownerId;
     private String name;
     private String description;
     private BigDecimal price;

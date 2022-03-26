@@ -10,7 +10,7 @@ public interface IProductService {
 
 	public Optional<Product> findById(long id);
 
-	public List<Product> findAll();
+	public List<Product> findByOwnerId(long id);
 
 	public void delete(Product product);
 

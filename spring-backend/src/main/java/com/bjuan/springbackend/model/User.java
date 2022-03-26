@@ -27,4 +27,18 @@ public class User {
     @OneToMany(targetEntity=Product.class)
     private List<Product> products;
 
+    public void addProduct(Product product){
+        this.products.add(product);
+    }
+
+    public Product deleteProduct(Product product){
+        for(Product p: products){
+            if(p.getId() == product.getId()){
+                products.remove(p);
+                return p;
+            }
+        }
+        return null;
+    }
+
 }

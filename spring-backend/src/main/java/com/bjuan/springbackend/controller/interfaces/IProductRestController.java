@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface IProductRestController {
 
-    public List<Product> findAll();
+    public ResponseEntity<List<Product>> findAll(Long id);
 	
-	public Product findById(Long id);
+	public ResponseEntity<Product> findById(Long id);
 
 	public ResponseEntity<Product> save(Product product);
 
-	public ResponseEntity<Product> delete(Long id) ;
+	public ResponseEntity<Product> delete(Product product) ;
 }
