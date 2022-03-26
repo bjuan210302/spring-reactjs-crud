@@ -1,8 +1,10 @@
 package com.bjuan.springbackend.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,21 +28,39 @@ public class User {
     private String email;
     private String password;
 
-    @OneToMany(targetEntity=Product.class)
+    @OneToMany(
+        targetEntity=Product.class, // Owned type
+        mappedBy = "owner", // Owner variable in owned class
+        fetch = FetchType.EAGER, // So i can call the whole collection
+        orphanRemoval = true) // Deletes all owned when owner is deleted 
     private List<Product> products;
 
     public void addProduct(Product product){
-        this.products.add(product);
+        product.setOwner(this);
+        products.add(product);
     }
 
-    public Product deleteProduct(Product product){
+    // THIS THROWS NULL AND I DONT KNOW WHY
+    // OTHER METHODS USING THIS COLLECTION WORK OK ???????
+    public int countProducts(){
+        System.out.println(products);
+        return products.size();
+    }
+
+    // THIS THROWS NULL AND I DONT KNOW WHY
+    // OTHER METHODS USING THIS COLLECTION WORK OK ???????
+    public Product getProduct(Long id){
         for(Product p: products){
-            if(p.getId() == product.getId()){
-                products.remove(p);
+            if(p.getId() == id){
                 return p;
             }
         }
         return null;
+    }
+
+    public void deleteProduct(Product product){
+        products.remove(product);
+        product.setOwner(null);
     }
 
 }

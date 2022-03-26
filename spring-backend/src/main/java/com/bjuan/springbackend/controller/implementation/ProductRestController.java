@@ -44,7 +44,7 @@ public class ProductRestController implements IProductRestController{
 
     @GetMapping("/delete")
     public ResponseEntity<Product> delete(@RequestBody Product product) {
-        if((Long)product.getId() == null || (Long)product.getOwnerId() == null)
+        if((Long)product.getId() == null || product.getOwner() == null)
             return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);
         
         try{

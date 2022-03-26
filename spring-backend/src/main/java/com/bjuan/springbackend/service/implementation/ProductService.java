@@ -26,7 +26,10 @@ public class ProductService implements IProductService {
 
     @Override
     public void save(Product product) {
-        Optional<User> owner = userService.findById(product.getOwnerId());
+        if(product.getOwner() == null)
+            throw new IllegalArgumentException();
+
+        Optional<User> owner = userService.findById(product.getOwner().getId());
         if(owner.isEmpty())
             throw new IllegalArgumentException();
 
@@ -47,10 +50,13 @@ public class ProductService implements IProductService {
 
     @Override
     public void delete(Product product) {
+        if(product.getOwner() == null)
+            throw new IllegalArgumentException();
+
         if(productRepository.findById(product.getId()).isEmpty())
             throw new IllegalArgumentException();
         
-        Optional<User> owner = userService.findById(product.getOwnerId());
+        Optional<User> owner = userService.findById(product.getOwner().getId());
         if(owner.isEmpty())
             throw new IllegalArgumentException();
 
