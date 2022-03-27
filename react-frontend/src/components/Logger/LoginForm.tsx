@@ -1,13 +1,16 @@
+import axios from 'axios';
 import React, { useState } from 'react'
+import { APIRoute } from '../../App';
+import { UserSessionObeserver } from './Logger';
 
 export interface LoginInfo {
     email: string;
     password: string;
 }
 
-const LoginForm = () => {
+const LoginForm = (props: UserSessionObeserver) => {
 
-  const [state, setState] = useState({
+  const [state, setState] = useState<LoginInfo>({
     email: "",
     password: ""
   })
@@ -18,6 +21,18 @@ const LoginForm = () => {
         ...prevState,
         [event.target.id] : event.target.value
     }))
+  }
+
+  const login = (event: React.MouseEvent<HTMLElement>) => {
+    const loginAndSend = async () => {
+
+      const res = await axios.post(APIRoute + 'users/login/', state);
+
+      console.log(res.data)
+      props.onUserLoggedIn(res.data)
+    };
+
+    loginAndSend();
   }
 
   return (
@@ -35,7 +50,7 @@ const LoginForm = () => {
           <input value={state.password} onChange={handleChange} id="password" type="password" className="form-control"  />
         </div>
 
-        <button type="submit" className="btn btn-primary mt-2">Submit</button>
+        <button onClick={login} className="btn btn-primary mt-2">Log in</button>
         
       </form>
     </div>

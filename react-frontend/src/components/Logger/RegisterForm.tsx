@@ -1,8 +1,19 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { APIRoute } from "../../App";
+import { UserSessionObeserver } from "./Logger";
 
-const RegisterForm = () => {
+export interface SignupInfo {
+  name: string,
+  surname: string,
+  email: string,
+  password: string,
+  repeatPassword: string
+}
 
-  const [state, setState] = useState({
+const RegisterForm = (props: UserSessionObeserver) => {
+
+  const [state, setState] = useState<SignupInfo>({
     name: "",
     surname: "",
     email: "",
@@ -15,6 +26,18 @@ const RegisterForm = () => {
         ...prevState,
         [event.target.id] : event.target.value
     }))
+  }
+
+  const register = (event: React.MouseEvent<HTMLElement>) => {
+      const signupAndSend = async () => {
+  
+        const res = await axios.post(APIRoute + 'users/signup/', state);
+  
+        console.log(res.data)
+        props.onUserLoggedIn(res.data)
+      };
+
+      signupAndSend();
   }
 
   return (
@@ -57,7 +80,8 @@ const RegisterForm = () => {
           </label>
         </div>
 
-        <button type="submit" className="btn btn-primary btn-block mb-3">Sign in</button>
+        <button onClick={register} className="btn btn-primary btn-block mb-3">Sign in</button>
+
       </form>
     </div>
   );

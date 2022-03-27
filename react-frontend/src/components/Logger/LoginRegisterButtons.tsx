@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 
-// ??????? 
-// stack overflow said this is how you elevate info to pared
-export interface Observable {
+export interface LoginRegisterButonsButtonsProps {
   loginActive: boolean;
   onSelectedLoginChanged(loginActive: boolean): any; 
 }
 
-const LoginRegisterButonsButtons = (props: Observable) => {
+const LoginRegisterButonsButtons = (props: LoginRegisterButonsButtonsProps) => {
 
   const [loginActive, setLoginActive] = useState(props.loginActive)
 

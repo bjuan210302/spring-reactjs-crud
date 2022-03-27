@@ -3,9 +3,10 @@ import axios from 'axios';
 import { APIRoute } from '../../App';
 import Products from './Products';
 import Pagination from './Pagination';
+import { User } from '../Logger/Logger';
 
 export interface DashboardProps {
-  propUserId: number
+  propUserId: User
 }
 
 const Dashboard = (dashboardProps: DashboardProps) => {
@@ -13,7 +14,7 @@ const Dashboard = (dashboardProps: DashboardProps) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(2);
+  const [productsPerPage] = useState(10);
 
   useEffect(() => {
     const getUserProducts = async () => {
