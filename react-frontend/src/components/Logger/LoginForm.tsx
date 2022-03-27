@@ -5,7 +5,7 @@ export interface LoginInfo {
     password: string;
 }
 
-const Login = () => {
+const LoginForm = () => {
 
   const [state, setState] = useState({
     email: "",
@@ -43,4 +43,4 @@ const Login = () => {
 }
 
 
-export default Login;
+export default LoginForm;

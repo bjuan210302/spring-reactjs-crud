@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Register = () => {
+const RegisterForm = () => {
 
   const [state, setState] = useState({
     name: "",
@@ -64,4 +64,4 @@ const Register = () => {
 
 }
 
-export default Register;
+export default RegisterForm;

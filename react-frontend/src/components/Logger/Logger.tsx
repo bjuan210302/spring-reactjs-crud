@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Login from "./Login";
+import LoginForm from "./LoginForm";
 import LoginRegisterButonsButtons from "./LoginRegisterButtons";
-import Register from "./Register";
+import RegisterForm from "./RegisterForm";
 
-const Home = () => {
+const Logger = () => {
 
   const [state, setState] = useState({
     showLogin: true
@@ -20,8 +20,8 @@ const Home = () => {
         
         <div className="row py-4 px-2 shadow">
           <LoginRegisterButonsButtons loginActive={true} onSelectedLoginChanged={handleLoginChange} />
-          {state.showLogin ? <Login /> : null }
-          {!state.showLogin ? <Register /> : null}
+          {state.showLogin ? <LoginForm /> : null }
+          {!state.showLogin ? <RegisterForm /> : null}
         </div>
 
       </div>
@@ -30,4 +30,4 @@ const Home = () => {
 
 }
 
-export default Home;
+export default Logger;
