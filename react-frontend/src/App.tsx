@@ -1,14 +1,15 @@
 import React from 'react';
 import './App.css';
 import Logger from './components/Logger/Logger';
+import Dashboard from './components/products/Dashboard';
 
-export const APIRoute = "ec2-23-20-38-158.compute-1.amazonaws.com:8080/api/v1/";
+export const APIRoute = "http://localhost:8080/api/v1/";
 
 const App = () => {
   
   return (
     <div className="container-fluid vh-100">
-      <Logger />
+      <Dashboard propUserId={1}/>
     </div>
   );
 
