@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.bjuan.springbackend.controller.interfaces.IProductRestController;
 import com.bjuan.springbackend.model.Product;
+import com.bjuan.springbackend.model.User;
 import com.bjuan.springbackend.service.implementation.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class ProductRestController implements IProductRestController{
 	private ProductService productService;
 
     @PostMapping("/")
-    public ResponseEntity<List<Product>> findAll(@RequestBody Long ownerId) {
+    public ResponseEntity<List<Product>> findAll(@RequestBody User owner) {
         // Safe to assume the user exists because this comes from the logged user id.
-        return new ResponseEntity<List<Product>>(productService.findByOwnerId(ownerId), HttpStatus.OK);
+        return new ResponseEntity<List<Product>>(productService.findByOwnerId(owner.getId()), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
