@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +27,7 @@ public class ProductRestController implements IProductRestController{
     @Autowired
 	private ProductService productService;
 
-    @GetMapping("/")
+    @PostMapping("/")
     public ResponseEntity<List<Product>> findAll(@RequestBody Long ownerId) {
         // Safe to assume the user exists because this comes from the logged user id.
         return new ResponseEntity<List<Product>>(productService.findByOwnerId(ownerId), HttpStatus.OK);
@@ -39,13 +40,13 @@ public class ProductRestController implements IProductRestController{
         return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/save")
+    @PostMapping("/save")
     public ResponseEntity<Product> save(@RequestBody Product product) {
         productService.save(product);
 		return new ResponseEntity<Product>(HttpStatus.OK);
     }
 
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     public ResponseEntity<Product> delete(@RequestBody Product product) {
         if((Long)product.getId() == null || product.getOwner() == null)
             return new ResponseEntity<Product>(HttpStatus.BAD_REQUEST);

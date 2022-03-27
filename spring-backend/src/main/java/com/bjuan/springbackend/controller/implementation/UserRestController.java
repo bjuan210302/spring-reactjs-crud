@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 @RequestMapping(value = "/api/v1/users/")
 public class UserRestController implements IUserRestController{
 
