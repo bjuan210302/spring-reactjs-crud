@@ -1,7 +1,7 @@
 package com.bjuan.springbackend.model;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,7 +32,7 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    private Timestamp creationDate;
+    private LocalDateTime creationDate;
 
     // private List<String> images; //Temporarily of type String
 
