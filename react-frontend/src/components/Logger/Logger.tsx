@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Login from "./Login";
 import LoginRegisterButonsButtons from "./LoginRegisterButtons";
 import Register from "./Register";
 
 const Home = () => {
-  let showLogin: boolean = false // dotn know if allowed
+
+  const [state, setState] = useState({
+    showLogin: true
+  })
 
   const handleLoginChange = (loginActive: boolean):void => {
-    showLogin = loginActive;
-    console.log(showLogin)
+    setState({showLogin: loginActive})
+    console.log(state.showLogin)
   }
 
   return (
@@ -17,8 +20,8 @@ const Home = () => {
         
         <div className="row py-4 px-2 shadow">
           <LoginRegisterButonsButtons loginActive={true} onSelectedLoginChanged={handleLoginChange} />
-          {showLogin && <Login />}
-          {!showLogin && <Register />}
+          {state.showLogin ? <Login /> : null }
+          {!state.showLogin ? <Register /> : null}
         </div>
 
       </div>

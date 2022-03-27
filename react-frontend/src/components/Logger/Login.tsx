@@ -8,8 +8,8 @@ export interface LoginInfo {
 const Login = () => {
 
   const [state, setState] = useState({
-    email : "",
-    password : ""
+    email: "",
+    password: ""
   })
   
   // Took me ages to understand this btw
@@ -25,23 +25,19 @@ const Login = () => {
       <form>
 
         <div className="form-group py-2">
-          <label>Email address</label>
-          <input value={state.email} onChange={handleChange} id="email" type="email" className="form-control" placeholder="Enter email" />
+          <label className="form-label">Email address</label>
+          <input value={state.email} onChange={handleChange} id="email" type="email" className="form-control" />
           <small className="form-text">We'll never share your email with anyone else.</small>
         </div>
 
         <div className="form-group py-2">
-          <label>Password</label>
-          <input value={state.password} onChange={handleChange} id="password" type="password" className="form-control" placeholder="Password" />
+          <label className="form-label">Password</label>
+          <input value={state.password} onChange={handleChange} id="password" type="password" className="form-control"  />
         </div>
 
         <button type="submit" className="btn btn-primary mt-2">Submit</button>
         
       </form>
-
-      <pre>
-        {JSON.stringify(state, null, 2)}
-      </pre>
     </div>
   )
 }
