@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "*", allowedHeaders = "*") // Please stop bitching about my headers, axios
+@CrossOrigin(origins = "http://localhost.com", maxAge = 3600) // Pls just workkk pls
 @RestController
 @RequestMapping(value = "/api/v1/users/")
 public class UserRestController implements IUserRestController{
