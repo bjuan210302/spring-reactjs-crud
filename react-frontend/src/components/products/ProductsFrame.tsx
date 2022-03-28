@@ -1,5 +1,5 @@
 import React from 'react';
-import ProductCard from './ProductCard';
+import ProductCard, { ProductCardProps } from './ProductCard';
 
 export interface Product {
   id?: number,
@@ -9,7 +9,7 @@ export interface Product {
   creationDate?: Date
 }
 
-export interface ProductsProps {
+export interface ProductsProps extends ProductCardProps {
   products: Product[],
   loading: boolean
 }
@@ -25,7 +25,7 @@ const ProductsFrame = (props: ProductsProps) => {
       
       {props.products.map(post => (
           <div className='col-12 col-sm-6 col-md-4 col-lg-3' key={post.id}>
-            <ProductCard product={post} />
+            <ProductCard product={post} askForCreds={props.askForCreds} notify={props.notify}/>
           </div>
         ))}
 

@@ -11,8 +11,16 @@ const ProductRegister = () => {
   const [state, setState] = useState<Product>({
     name: "",
     description: "",
-    price: 0,
+    price: 1,
   })
+
+  useEffect(() => {
+    if (state.id) {
+      console.log("aca")
+      //This means is editing
+      setState(state);
+    }
+  }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement >) => {
     setState(prevState => ({

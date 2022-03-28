@@ -42,14 +42,21 @@ const Dashboard = (props: DashboardProps) => {
     setLoading(false);
   }, [loading]);
 
+  let indexOfLastPost = currentPage * productsPerPage;
+  let indexOfFirstPost = indexOfLastPost - productsPerPage;
+  let productsSubset = products.slice(indexOfFirstPost, indexOfLastPost);
 
+  const paginate = (newPage: number) => setCurrentPage(newPage)
+  const giveCreds = () => {return props.propUser.id;}
+  const onUpdate = () => {setLoading(true);}
+
+  
   // (kind of) Custom hook to let ProductRegister scalate the productRegisterRequest to parent.
   // Using this because passing a function thru Outlet's context behaves weird.
   // Could also be done creating a hook for an object with a function I think, haven't tested.
   // See https://reactrouter.com/docs/en/v6/api#useoutletcontext
   // https://stackoverflow.com/questions/55621212/is-it-possible-to-react-usestate-in-react
   const onProductRegistrationRequest = (productCandidate: Product) => {
-    console.log(productCandidate, "Candidato")
 
     axios.post(APIRoute + "products/save", {
       ...productCandidate,
@@ -57,19 +64,13 @@ const Dashboard = (props: DashboardProps) => {
         id: props.propUser.id
       }
     }).then((res) => {
-      setLoading(true);
+      onUpdate()
     });
 
   }
   const [registrateProduct, setRegistrateProduct] =
-    React.useState<(x: Product) => {}>(() => onProductRegistrationRequest);
+    useState<(x: Product) => {}>(() => onProductRegistrationRequest);
   // It looks really ugly tho
-
-  let indexOfLastPost = currentPage * productsPerPage;
-  let indexOfFirstPost = indexOfLastPost - productsPerPage;
-  let productsSubset = products.slice(indexOfFirstPost, indexOfLastPost);
-
-  const paginate = (newPage: number) => setCurrentPage(newPage)
 
   return (
     <div className='row h-100 mx-4'>
@@ -89,7 +90,7 @@ const Dashboard = (props: DashboardProps) => {
         </Link>
 
       </div>
-      <ProductsFrame products={productsSubset} loading={loading} />
+      <ProductsFrame products={productsSubset} loading={loading} askForCreds={giveCreds} notify={onUpdate} />
       <Pagination postsPerPage={productsPerPage} totalPosts={products.length} paginate={paginate} />
       <Outlet context={{ registrateProduct }} />
 
