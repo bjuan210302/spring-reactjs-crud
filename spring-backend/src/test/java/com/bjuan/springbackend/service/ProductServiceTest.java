@@ -1,7 +1,6 @@
 package com.bjuan.springbackend.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -62,15 +61,10 @@ class ProductServiceTest {
 		p2.setOwner(testUser);
 		p3.setOwner(testUser);
 		p4.setOwner(testUser);
-		System.out.println("oe");
 		productService.save(p);
-		System.out.println("oe2");
 		productService.save(p2);
-		System.out.println("oe3");
 		productService.save(p3);
-		System.out.println("oe4");
 		productService.save(p4);
-		System.out.println("oe5");
 	}
 
 	@Test
