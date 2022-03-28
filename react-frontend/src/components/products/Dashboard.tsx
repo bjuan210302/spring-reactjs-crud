@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { APIRoute } from '../../App';
-import Products, { Product } from './Products';
+import ProductsFrame, { Product } from './ProductsFrame';
 import Pagination from './Pagination';
 import { User } from '../Logger/Logger';
 import { Outlet, useNavigate } from 'react-router';
@@ -18,7 +18,7 @@ const Dashboard = (props: DashboardProps) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(10);
+  const [productsPerPage] = useState(8);
 
   // This component will get rendered when the user press the Login or Register buttons.
   // 
@@ -29,27 +29,18 @@ const Dashboard = (props: DashboardProps) => {
     }
 
     const getUserProducts = async () => {
-      setLoading(true);
-
-      console.log("trying to load from user " + props.propUser)
-
-      axios.post(APIRoute + 'products/', {
+      
+      
+      const res = await axios.post(APIRoute + 'products/', {
         id: props.propUser.id
-      }).then((res) => {
-        console.log(res)
-        setProducts(res.data);
-        setLoading(false);
-
       });
+      setProducts(res.data);
+
     };
 
     getUserProducts();
-  }, []);
-
-
-  const indexOfLastPost = currentPage * productsPerPage;
-  const indexOfFirstPost = indexOfLastPost - productsPerPage;
-  const productsSubset = products.slice(indexOfFirstPost, indexOfLastPost);
+    setLoading(false);
+  }, [loading]);
 
 
   // (kind of) Custom hook to let ProductRegister scalate the productRegisterRequest to parent.
@@ -58,16 +49,15 @@ const Dashboard = (props: DashboardProps) => {
   // See https://reactrouter.com/docs/en/v6/api#useoutletcontext
   // https://stackoverflow.com/questions/55621212/is-it-possible-to-react-usestate-in-react
   const onProductRegistrationRequest = (productCandidate: Product) => {
-    console.log(productCandidate)
+    console.log(productCandidate, "Candidato")
 
     axios.post(APIRoute + "products/save", {
       ...productCandidate,
       owner: {
         id: props.propUser.id
       }
-    }).then((res) =>{
-      //Paginate new object
-      console.log(res.data)
+    }).then((res) => {
+      setLoading(true);
     });
 
   }
@@ -75,16 +65,35 @@ const Dashboard = (props: DashboardProps) => {
     React.useState<(x: Product) => {}>(() => onProductRegistrationRequest);
   // It looks really ugly tho
 
+  let indexOfLastPost = currentPage * productsPerPage;
+  let indexOfFirstPost = indexOfLastPost - productsPerPage;
+  let productsSubset = products.slice(indexOfFirstPost, indexOfLastPost);
+
   const paginate = (newPage: number) => setCurrentPage(newPage)
 
   return (
-    <ul className='list-group mb-4'>
-      <Products products={productsSubset} loading={loading} />
+    <div className='row h-100 mx-4'>
+      <div className='d-flex mt-auto text-primary'>
+        <h1 className='fs-1'>
+          My Products
+        </h1>
+
+        <Link to={"register"} className="my-auto mx-2 text-bold">
+        <span className='mx-2'>
+          Add new product
+        </span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
+            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+          </svg>
+        </Link>
+
+      </div>
+      <ProductsFrame products={productsSubset} loading={loading} />
       <Pagination postsPerPage={productsPerPage} totalPosts={products.length} paginate={paginate} />
-      <Link to={"register"} className="btn btn-primary mt-2"> Add Product </Link>
       <Outlet context={{ registrateProduct }} />
 
-    </ul>
+    </div>
   );
 
 };

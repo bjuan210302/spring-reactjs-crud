@@ -20,24 +20,21 @@ const RegisterForm = (props: UserSessionObeserver) => {
     password: "",
     repeatPassword: ""
   })
-  
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState(prevState => ({
-        ...prevState,
-        [event.target.id] : event.target.value
+      ...prevState,
+      [event.target.id]: event.target.value
     }))
   }
 
   const register = (event: React.MouseEvent<HTMLElement>) => {
-      const signupAndSend = async () => {
-  
-        const res = await axios.post(APIRoute + 'users/signup/', state);
-  
-        console.log(res.data)
-        props.onUserLoggedIn(res.data)
-      };
+    const signupAndSend = async () => {
+      const res = await axios.post(APIRoute + 'users/signup/', state);
+      props.onUserLoggedIn(res.data)
+    };
 
-      signupAndSend();
+    signupAndSend();
   }
 
   return (

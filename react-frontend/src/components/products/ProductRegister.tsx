@@ -3,18 +3,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { APIRoute } from '../../App';
 import { useRegistrateProduct } from './Dashboard';
-import { Product } from './Products';
+import { Product } from './ProductsFrame';
 
-interface ProductRegisterProps {
-  elevateProductRegisRequest?(newProduct: Product): any;
-}
-
-const ProductRegister = (props: ProductRegisterProps) => {
+const ProductRegister = () => {
 
   const navigate = useNavigate();
   const [state, setState] = useState<Product>({
     name: "",
-    desc: "",
+    description: "",
     price: 0,
   })
 
@@ -31,13 +27,14 @@ const ProductRegister = (props: ProductRegisterProps) => {
     const tryToRegister = () => {
       // Elevate this because parent is the component with the user credentials
       // and the component in charge of pagination
-      console.log(props.elevateProductRegisRequest)
       parentRegistrator.registrateProduct(state)
     };
     
     //Do data comprobations
-    if(true)
+    if(true){
       tryToRegister();
+      navigate(-1)
+    }
 
   }
 
@@ -48,13 +45,13 @@ const ProductRegister = (props: ProductRegisterProps) => {
 
   // Because bootstrap's bg-opacity-x won't work
   const modalAditionalStyle = {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+    backgroundColor: 'rgba(0, 0, 0, 0.5)'
   }
 
   return (
     <div style={modalAditionalStyle} className={modalBootstrapClasses} onClick={() => { navigate(-1) }}>
 
-      <div className="bg-white"
+      <div className="bg-white card p-4 w-50"
       onClick={e => e.stopPropagation()}>
 
         <form>
@@ -67,7 +64,7 @@ const ProductRegister = (props: ProductRegisterProps) => {
           <div className="form-group py-2">
             <div className="form-label">Description</div>-
             <small className="form-text">What's your idea?</small>
-            <textarea value={state.desc} onChange={handleChange} id="desc" className="form-control" />
+            <textarea value={state.description} onChange={handleChange} id="description" className="form-control" />
           </div>
 
           <div className="form-group py-2">
