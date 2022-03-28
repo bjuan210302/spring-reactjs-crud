@@ -1,11 +1,11 @@
 import React from 'react';
 
 export interface Product {
-    id: string,
+    id?: number,
     name: string,
     desc: string,
     price: number,
-    creationDate: Date
+    creationDate?: Date
 }
 
 export interface ProductsProps {

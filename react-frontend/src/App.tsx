@@ -3,12 +3,13 @@ import './App.css';
 import Logger, { User } from './components/Logger/Logger';
 import Dashboard from './components/products/Dashboard';
 
-import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter, Outlet } from "react-router-dom";
 
 // Tried useNavigate, can't redirect outside context
 // https://github.com/remix-run/react-router/issues/8264
 // Workaroud for redirections is createBrowserHistory and HistoryRouter
 import { createBrowserHistory } from 'history';
+import ProductRegister from './components/products/ProductRegister';
 export const history = createBrowserHistory();
 
 export const APIRoute = "http://localhost:8080/api/v1/";
@@ -28,7 +29,9 @@ const App = () => {
           <Route path="/" element={
             <Logger onUserLoggedIn={userLoggedIn} />
           } />
-          <Route path="/dashboard" element={<Dashboard propUser={user!} />} />
+          <Route path="/dashboard" element={ <Dashboard propUser={user!} /> }>
+            <Route path="register" element={ <ProductRegister /> }/>
+          </Route>
         </Routes>
       </div>
     </BrowserRouter>

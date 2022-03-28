@@ -4,7 +4,8 @@ import { APIRoute } from '../../App';
 import Products from './Products';
 import Pagination from './Pagination';
 import { User } from '../Logger/Logger';
-import { useNavigate } from 'react-router';
+import { Outlet, useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export interface DashboardProps {
   propUser: User
@@ -48,6 +49,8 @@ const Dashboard = (props: DashboardProps) => {
     <ul className='list-group mb-4'>
       <Products products={productsSubset} loading={loading} />
       <Pagination postsPerPage={productsPerPage} totalPosts={products.length} paginate={paginate}/>
+      <Link to={"register"} className="btn btn-primary mt-2"> Add Product </Link>
+      <Outlet />
     </ul>
   );
 

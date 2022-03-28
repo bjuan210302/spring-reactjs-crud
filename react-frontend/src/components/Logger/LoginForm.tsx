@@ -27,10 +27,7 @@ const LoginForm = (props: UserSessionObeserver) => {
 
   const login = (event: React.MouseEvent<HTMLElement>) => {
     const loginAndSend = async () => {
-      console.log("here")
       const res = await axios.post(APIRoute + 'users/login/', state);
-
-      
       props.onUserLoggedIn(res.data)
     };
 
@@ -59,9 +56,4 @@ const LoginForm = (props: UserSessionObeserver) => {
   )
 }
 
-
 export default LoginForm;
-
-function useNavigate() {
-  throw new Error('Function not implemented.');
-}
