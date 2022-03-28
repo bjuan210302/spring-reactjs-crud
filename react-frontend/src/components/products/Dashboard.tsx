@@ -4,31 +4,37 @@ import { APIRoute } from '../../App';
 import Products from './Products';
 import Pagination from './Pagination';
 import { User } from '../Logger/Logger';
+import { useNavigate } from 'react-router';
 
 export interface DashboardProps {
-  propUserId: User
+  propUser: User
 }
 
-const Dashboard = (dashboardProps: DashboardProps) => {
+const Dashboard = (props: DashboardProps) => {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(10);
 
+  // This component will get rendered when the user press the Login or Register buttons.
+  // 
   useEffect(() => {
     const getUserProducts = async () => {
       setLoading(true);
 
-      const res = await axios.post(APIRoute + 'products/', {
-        id: dashboardProps.propUserId
+      console.log("trying to load from user " + props.propUser)
+
+      axios.post(APIRoute + 'products/', {
+        id: props.propUser.id
+      }).then((res) => {
+        console.log(res)
+        setProducts(res.data);
+        setLoading(false);
+        
       });
-
-      console.log(res)
-      setProducts(res.data);
-      setLoading(false);
     };
-
+    
     getUserProducts();
   }, []);
 
