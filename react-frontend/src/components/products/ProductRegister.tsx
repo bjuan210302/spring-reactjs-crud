@@ -1,20 +1,22 @@
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { APIRoute } from '../../App';
+import { useRegistrateProduct } from './Dashboard';
 import { Product } from './Products';
 
-const ProductRegister = () => {
+interface ProductRegisterProps {
+  elevateProductRegisRequest?(newProduct: Product): any;
+}
+
+const ProductRegister = (props: ProductRegisterProps) => {
 
   const navigate = useNavigate();
-  const [modal, setModal] = useState<Boolean>(true)
   const [state, setState] = useState<Product>({
     name: "",
     desc: "",
     price: 0,
   })
-
-  useEffect(()=>{
-    console.log("modal")
-  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement >) => {
     setState(prevState => ({
@@ -23,13 +25,19 @@ const ProductRegister = () => {
     }))
   }
 
-  const addProduct = (event: React.MouseEvent<HTMLElement>) => {
-    const pushToServer = async () => {
-      // push product to server
-      // reload dashboard
-    };
+  const parentRegistrator = useRegistrateProduct();
 
-    pushToServer();
+  const addProduct = (event: React.MouseEvent<HTMLElement>) => {
+    const tryToRegister = () => {
+      // Elevate this because parent is the component with the user credentials
+      // and the component in charge of pagination
+      console.log(props.elevateProductRegisRequest)
+      parentRegistrator.registrateProduct(state)
+    };
+    
+    //Do data comprobations
+    if(true)
+      tryToRegister();
 
   }
 
